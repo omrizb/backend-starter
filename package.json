@@ -1,15 +1,21 @@
 {
-  "name": "backend-starter",
+  "name": "server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon --ignore \"./data\" server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "production ready server",
+  "main": "server.js",
   "type": "module",
-  "author": "",
+  "scripts": {
+      "start": "nodemon server.js",
+      "server:dev": "nodemon server.js",
+      "server:prod": "set NODE_ENV=production&&node server.js",
+      "server:prod:mac": "export NODE_ENV=production && node server.js"
+  },
+  "author": "Omri Barouch",
   "license": "ISC",
+  "devDependencies": {
+      "@types/node": "^20.14.10",
+      "nodemon": "^3.1.4"
+  },
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -17,7 +23,7 @@
     "express": "^4.19.2",
     "follow-redirects": "^1.15.6",
     "fs": "^0.0.1-security",
-    "nodemon": "^3.1.4",
+    "mongodb": "^6.8.0",
     "path": "^0.12.7",
     "qs": "^6.12.3"
   }
