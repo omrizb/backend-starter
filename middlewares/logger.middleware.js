@@ -1,6 +1,8 @@
 import { logger } from '../services/logger.service.js'
 
 export async function log(req, res, next) {
-    logger.info('Req was made', req.route.path)
+    const { baseUrl, method, body, params } = req
+    const logEntry = { baseUrl, method, body, params }
+    logger.info(JSON.stringify(logEntry, null, 2))
     next()
 }

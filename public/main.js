@@ -1,6 +1,6 @@
 import { carService } from './services/car.service.js'
 import { userService } from './services/user.service.js'
-import { utilService } from './services/util.service.js'
+import { prettyJSON } from './services/util.service.js'
 
 console.log('Simple driver to test some API calls')
 
@@ -35,13 +35,13 @@ async function onRemoveCar() {
 }
 
 async function onAddCar() {
-    await userService.login({ username: 'puki', password: 'secret' })
+    await userService.login({ username: 'puki', password: '123' })
     const savedCar = await carService.save(carService.getEmptyCar())
     render('Saved Car', savedCar)
 }
 
 async function onAddCarMsg() {
-    await userService.login({ username: 'puki', password: 'secret' })
+    await userService.login({ username: 'puki', password: '123' })
     const id = prompt('Car id?')
     if (!id) return
 
@@ -51,7 +51,7 @@ async function onAddCarMsg() {
 
 function render(title, mix = '') {
     console.log(title, mix)
-    const output = utilService.prettyJSON(mix)
+    const output = prettyJSON(mix)
     document.querySelector('h2').innerText = title
     document.querySelector('pre').innerHTML = output
 }
