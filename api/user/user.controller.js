@@ -1,6 +1,6 @@
-import {userService} from './user.service.js'
-import {logger} from '../../services/logger.service.js'
-import {socketService} from '../../services/socket.service.js'
+import { userService } from './user.service.js'
+import { logger } from '../../services/logger.service.js'
+import { socketService } from '../../services/socket.service.js'
 
 export async function getUser(req, res) {
     try {
@@ -23,6 +23,17 @@ export async function getUsers(req, res) {
     } catch (err) {
         logger.error('Failed to get users', err)
         res.status(400).send({ err: 'Failed to get users' })
+    }
+}
+
+export async function addUser(req, res) {
+    try {
+        const user = req.body
+        const savedUser = await userService.add(user)
+        res.send(savedUser)
+    } catch (err) {
+        logger.error('Failed to add user', err)
+        res.status(400).send({ err: 'Failed to add user' })
     }
 }
 

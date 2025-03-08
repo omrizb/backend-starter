@@ -5,8 +5,9 @@ import { utilService } from '../../services/util.service.js'
 import { dbService } from '../../services/db.service.js'
 import { asyncLocalStorage } from '../../services/als.service.js'
 
-const PAGE_SIZE = 3
 
+const PAGE_SIZE = 3
+const CAR_COLLECTION = 'car'
 
 export const carService = {
     remove,
@@ -23,7 +24,7 @@ async function query(filterBy = { txt: '' }) {
         const criteria = _buildCriteria(filterBy)
         const sort = _buildSort(filterBy)
 
-        const collection = await dbService.getCollection('car')
+        const collection = await dbService.getCollection(CAR_COLLECTION)
         var carCursor = await collection.find(criteria, { sort })
 
         if (filterBy.pageIdx !== undefined) {
@@ -42,7 +43,7 @@ async function getById(carId) {
     try {
         const criteria = { _id: ObjectId.createFromHexString(carId) }
 
-        const collection = await dbService.getCollection('car')
+        const collection = await dbService.getCollection(CAR_COLLECTION)
         const car = await collection.findOne(criteria)
         car.createdAt = car._id.getTimestamp()
         return car
@@ -63,7 +64,7 @@ async function remove(carId) {
 
         if (!isAdmin) criteria['owner._id'] = loggedinUserId
 
-        const collection = await dbService.getCollection('car')
+        const collection = await dbService.getCollection(CAR_COLLECTION)
         const res = await collection.deleteOne(criteria)
 
         if (res.deletedCount === 0) throw ('Not your car')
@@ -76,7 +77,7 @@ async function remove(carId) {
 
 async function add(car) {
     try {
-        const collection = await dbService.getCollection('car')
+        const collection = await dbService.getCollection(CAR_COLLECTION)
         await collection.insertOne(car)
 
         return car
@@ -92,7 +93,7 @@ async function update(car) {
     try {
         const criteria = { _id: ObjectId.createFromHexString(car._id) }
 
-        const collection = await dbService.getCollection('car')
+        const collection = await dbService.getCollection(CAR_COLLECTION)
         await collection.updateOne(criteria, { $set: carToSave })
 
         return car
@@ -107,7 +108,7 @@ async function addCarMsg(carId, msg) {
         const criteria = { _id: ObjectId.createFromHexString(carId) }
         msg.id = utilService.makeId()
 
-        const collection = await dbService.getCollection('car')
+        const collection = await dbService.getCollection(CAR_COLLECTION)
         await collection.updateOne(criteria, { $push: { msgs: msg } })
 
         return msg
@@ -121,7 +122,7 @@ async function removeCarMsg(carId, msgId) {
     try {
         const criteria = { _id: ObjectId.createFromHexString(carId) }
 
-        const collection = await dbService.getCollection('car')
+        const collection = await dbService.getCollection(CAR_COLLECTION)
         await collection.updateOne(criteria, { $pull: { msgs: { id: msgId } } })
 
         return msgId

@@ -4,12 +4,15 @@ import { asyncLocalStorage } from '../../services/als.service.js'
 import { logger } from '../../services/logger.service.js'
 import { dbService } from '../../services/db.service.js'
 
+
+const REVIEW_COLLECTION = 'review'
+
 export const reviewService = { query, remove, add }
 
 async function query(filterBy = {}) {
     try {
         const criteria = _buildCriteria(filterBy)
-        const collection = await dbService.getCollection('review')
+        const collection = await dbService.getCollection(REVIEW_COLLECTION)
 
         var reviews = await collection.aggregate([
             {
@@ -53,7 +56,7 @@ async function query(filterBy = {}) {
             delete review.aboutUserId
             return review
         })
-        
+
         return reviews
     } catch (err) {
         logger.error('cannot get reviews', err)
@@ -64,7 +67,7 @@ async function query(filterBy = {}) {
 async function remove(reviewId) {
     try {
         const { loggedinUser } = asyncLocalStorage.getStore()
-        const collection = await dbService.getCollection('review')
+        const collection = await dbService.getCollection(REVIEW_COLLECTION)
 
         const criteria = { _id: ObjectId.createFromHexString(reviewId) }
         //* remove only if user is owner/admin
@@ -88,7 +91,7 @@ async function add(review) {
             aboutUserId: ObjectId.createFromHexString(review.aboutUserId),
             txt: review.txt,
         }
-        const collection = await dbService.getCollection('review')
+        const collection = await dbService.getCollection(REVIEW_COLLECTION)
         await collection.insertOne(reviewToAdd)
         return reviewToAdd
     } catch (err) {
